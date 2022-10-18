@@ -1,0 +1,249 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Researcher Details</title>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dataTables.bootstrap.min.css') }}" />
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-editable.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap-editable.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}"
+
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min2.css') }}" />
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/dataTables.bootstrap.min2.css') }}" />-->
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatable.css') }}">
+    <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='js/datatable.js') }}"></script>
+    <script type="text/javascript" language="javascript">
+    oTable = $('#sample_data').DataTable();   //pay attention to capital D, which is mandatory to retrieve "api" datatables' object, as @Lionel said
+    $('#searchbar').keyup(function(){
+          oTable.search($(this).val()).draw() ;
+    })
+
+    $(document).ready(function () {
+        $('#sample_data').DataTable({
+            search: {
+                return: true,
+            },
+        });
+    });
+    
+    function del(ID, name){
+        if (confirm("Are you sure you want to delete '" + name + "'")){
+            window.location.href = '/delete/' + ID;
+        }
+    }
+    </script>
+    <style>
+    @import url('//127.0.0.1/static/css/font-awesome.min.css');
+
+      .info-msg,
+      .success-msg,
+      .warning-msg,
+      .error-msg {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 3px 3px 3px 3px;
+      }
+      .panel-body{
+        box-shadow: 0px 2px 20px rgb(0, 0, 0);
+        border-radius: 1rem;
+      }
+      .heading{
+        text-shadow: 3px 3px 4px rgba(0,0,0,0.48);
+      }
+      .btn{
+        border: none;
+      }
+      .btn-primary {
+    color: #fff;
+    background-color: #020202;
+ 
+}
+.btn:hover{
+  color: #fff;
+    background-color: #020202;
+}
+  .btn-primary.focus, .btn-primary:focus {
+    color: #fff;
+    background-color: #020202;
+}
+    </style>
+  </head>
+    <body>
+        <div class="container">
+            <h3 align="center" class="heading"><b>Researcher Details</b></h3>
+            <br />
+            <div class="panel panel-default">
+              
+                <div class="panel-body">
+                  <br>
+                {% with messages = get_flashed_messages(with_categories=true)%}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
+                </div>
+                {% endfor %}
+                {% endwith %}
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#insert" style="display:inline;" >Add New Record</a>
+                <br>
+                <br>
+                    <div class="table-responsive">
+                      
+                        <table id="sample_data" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>R_ID</th>
+                                    <th>First-Name</th>
+                                    <th>Last-Name</th>
+                                    <th>Date-Of-Birth</th>
+                                    <th>Street</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip-Code</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in researcher %}
+                                <tr>
+                                    <td data-name="r_id" class="r_id" data-type="text" data-pk="{{row.id}}">{{row.r_id}}</td>
+                                    <td id="firstname" data-name="firstname" name="firstname" class="firstname" data-type="text" data-pk="{{row.id}}">{{row.firstname}}</td>
+                                    <td data-name="lastname" class="email" data-type="text" data-pk="{{row.id}}">{{row.lastname}}</td>
+                                    <td data-name="dateofbirth" class="phone" data-type="text" data-pk="{{row.id}}" maxlength="10" type="date" >{{row.dateofbirth.date()}}</td>
+                                    <td data-name="phone" class="phone" data-type="text" data-pk="{{row.id}}">{{row.street}}</td>
+                                    <td data-name="phone" class="phone" data-type="text" data-pk="{{row.id}}">{{row.city}}</td>
+                                    <td data-name="phone" class="phone" data-type="text" data-pk="{{row.id}}">{{row.state}}</td>
+                                    <td data-name="phone" class="phone" data-type="text" data-pk="{{row.id}}">{{row.zipcode}}</td>
+                                    <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target='#edit{{ row.id }}' >Update</a></td>
+                                    <td><a href="javascript:del('{{row.id}}','{{row.firstname}}')" class="btn btn-primary ">Delete</a></td>
+                                </tr>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="edit{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b>Edit Researcher detail</b></h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block;">
+                                        <span aria-hidden="true">×</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form role="form" method="post" action="/updateresearcher">
+                                        <div class="form-group" style="display: none;">
+                                          <label class="col-form-label" >R_ID:</label>
+                                          <input type="text" class="form-control" id="txtr_id" name="txtr_id" value="{{row.r_id}}" >
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label" >First-Name:</label>
+                                          <input type="text" class="form-control" id="txtfirstname" name="txtfirstname" value="{{row.firstname}}"  >
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">Last-Name:</label>
+                                          <input type="text" class="form-control" id="txtlastname" name="txtlastname" value="{{row.lastname}}">
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">Date-of-Birth:</label>
+                                          <input type="date" class="form-control" id="txtdateofbirth" name="txtdateofbirth" value="{{row.dateofbirth.date()}}">
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">Street:</label>
+                                          <input type="text" class="form-control" id="txtstreet" name="txtstreet" value="{{row.street}}">
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">City:</label>
+                                          <input type="text" class="form-control" id="txtcity" name="txtcity" value="{{row.city}}">
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">State:</label>
+                                          <input type="text" class="form-control" id="txtstate" name="txtstate" value="{{row.state}}">
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">Zip-Code:</label>
+                                          <input type="text" class="form-control" id="txtzipcode" name="txtzipcode" value="{{row.zipcode}}">
+                                        </div>
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>    
+
+                                
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <!--modal for insertion -->
+                        <div class="modal fade" id="insert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b>Edit Researcher detail</b></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block;">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form role="form" method="post" action="/add">
+                                  <div class="form-group" style="display: none;">
+                                    <label class="col-form-label" >R_ID:</label>
+                                    <input type="text" class="form-control" id="txtr_id" name="txtr_id"  >
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label" >First-Name:</label>
+                                    <input type="text" class="form-control" id="txtfirstname" name="fname" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">Last-Name:</label>
+                                    <input type="text" class="form-control" id="txtlastname" name="lname" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">Date-of-Birth:</label>
+                                    <input type="date" class="form-control" id="txtdateofbirth" name="dob" required >
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">Street:</label>
+                                    <input type="text" class="form-control" id="txtstreet" name="street"  required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">City:</label>
+                                    <input type="text" class="form-control" id="txtcity" name="city" required >
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">State:</label>
+                                    <input type="text" class="form-control" id="txtstate" name="state"  required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">Zip-Code:</label>
+                                    <input type="text" class="form-control" id="txtzipcode" name="zip"  required>
+                                  </div>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                        <!--modal for insertion -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </body>
+</html>

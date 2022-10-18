@@ -1,0 +1,205 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Organization Details</title>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dataTables.bootstrap.min.css') }}" />
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-editable.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap-editable.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}"
+
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min2.css') }}" />
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/dataTables.bootstrap.min2.css') }}" />-->
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatable.css') }}">
+    <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='js/datatable.js') }}"></script>
+<script type="text/javascript" language="javascript">
+  
+$('#searchSubmit').on( 'click', function () {
+      var searchstring = $('#searchbar').val();
+      alert(searchstring);
+      oTable.search(searchstring).draw();
+} );
+
+
+
+$(document).ready(function () {
+    $('#sample_data').DataTable({
+        search: {
+            return: true,
+        },
+    });
+});
+
+function del(ID, name){
+    if (confirm("Are you sure you want to delete '" + name + "'")){
+        window.location.href = '/delete/org/' + ID;
+    }
+}
+    </script>
+    <style>
+    @import url('//127.0.0.1/static/css/font-awesome.min.css');
+
+      .info-msg,
+      .success-msg,
+      .warning-msg,
+      .error-msg {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 3px 3px 3px 3px;
+      }
+      .panel-body{
+        box-shadow: 0px 2px 20px rgb(0, 0, 0);
+        border-radius: 1rem;
+      }
+      .heading{
+        text-shadow: 3px 3px 4px rgba(0,0,0,0.48);
+      }
+      .btn{
+        border: none;
+      }
+      .btn-primary {
+    color: #fff;
+    background-color: #020202;
+ 
+}
+.btn:hover{
+  color: #fff;
+    background-color: #020202;
+}
+  .btn-primary.focus, .btn-primary:focus {
+    color: #fff;
+    background-color: #020202;
+}
+    </style>
+  </head>
+    <body>
+        <div class="container">
+            <h3 align="center" class="heading"><b>Organization Details</b></h3>
+            <br />
+            <div class="panel panel-default">
+              
+                <div class="panel-body">
+                  <br>
+                {% with messages = get_flashed_messages(with_categories=true)%}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
+                </div>
+                {% endfor %}
+                {% endwith %}
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#insert" style="display:inline;" >Add New Organization</a>
+                <!--<a href="#" class="btn btn-primary" data-toggle="modal" style="display:inline;float: right;" id="searchSubmit">Search</a>-->
+                <br>
+                <br>
+                    <div class="table-responsive">
+                      
+                        <table id="sample_data" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Org_ID</th>
+                                    <th>Org_Name</th>
+                                    <th>Org_Domain</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in organization %}
+                                <tr>
+                                    <td data-name="org_id" class="org_id" data-type="text" data-pk="{{row.id}}">{{row.org_id}}</td>
+                                    <td id="org_name" data-name="org_name" name="org_name" class="org_name" data-type="text" data-pk="{{row.id}}">{{row.org_name}}</td>
+            
+                                    <td data-name="org_domain" class="org_domain" data-type="text" data-pk="{{row.id}}">{{row.org_domain}}</td>
+                                    <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target='#edit{{ row.id }}' >Update</a></td>
+                                    <td><a href="javascript:del('{{row.id}}','{{row.org_name}}')" class="btn btn-primary ">Delete</a></td>
+                                </tr>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="edit{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b>Edit Organization detail</b></h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block;">
+                                        <span aria-hidden="true">×</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form role="form" method="post" action="/updateorganization">
+                                        <div class="form-group" style="display: none;">
+                                          <label class="col-form-label" >Org_ID:</label>
+                                          <input type="text" class="form-control" id="txtorg_id" name="txtorg_id" value="{{row.org_id}}" >
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label" >Org_Name:</label>
+                                          <input type="text" class="form-control" id="txtorg_name" name="txtorg_name" value="{{row.org_name}}"  >
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">Org_Domain:</label>
+                                          <input type="text" class="form-control" id="txtorg_domain" name="txtorg_domain" value="{{row.org_domain}}">
+                                        </div>
+
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>      
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <!--modal for insertion -->
+                        <div class="modal fade" id="insert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h3 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b>Add New Organization</b></h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block;">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form role="form" method="post" action="{{url_for('addorg')}}">
+                                  <div class="form-group" style="display: none;">
+                                    <label class="col-form-label" >Org_ID:</label>
+                                    <input type="text" class="form-control" id="txtr_id" name="txtr_id"  >
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label" >Org_Name:</label>
+                                    <input type="text" class="form-control" id="txtorg_name" name="org_name" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-form-label">Org_Domain:</label>
+                                    <input type="text" class="form-control" id="txtorg_domain" name="org_domain" required>
+                                  </div>
+                                  
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                        <!--modal for insertion -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </body>
+</html>

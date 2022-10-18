@@ -1,0 +1,30 @@
+
+
+
+
+$("searchSubmit").click(function(e) {
+      var searchstring = $('#searchbar').val();
+      alert(searchstring);
+      oTable.search(searchstring).draw() ;
+});
+
+
+
+    $(document).ready(function() {
+    $("#searchSubmit").click(function(){
+      var searchstring = $('#searchbar').val();
+      alert(searchstring);
+      oTable.search(searchstring).draw() ;
+    }); 
+});
+
+
+
+
+
+oTable = $('#sample_data').DataTable();   
+    $('#searchbar').keyup(function(){
+          oTable.search($(this).val()).draw() ;
+          var tmp = $(this).val();
+          alert(tmp);
+    });
