@@ -12,15 +12,17 @@ def validate_name(firstname, minlen):
     if len(firstname) < minlen:
         return False
     # firstnames can only use letters, numbers, dots and underscores
-    '''if not re.match('^[a-z0-9._]*$', firstname):
-        return False'''
+    if not re.match("^[A-Za-z0-9_-]*$", firstname):
+        return False
     # firstnames can't begin with a number
     if firstname[0].isnumeric():
         return False
     return True
-
-def validate_street(street):
-    #validate street
-    street_address_validate_pattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(\\,)? [a-zA-Z]+(\\,)? [A-Z]{2} [0-9]{5,6}$"
-    if not re.match(street_address_validate_pattern,street):
+def validateSpace(firstname):
+     if not re.match("^[A-Za-z0-9_ -]*$", firstname):
         return False
+# def validate_street(street):
+#     #validate street
+#     street_address_validate_pattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(\\,)? [a-zA-Z]+(\\,)? [A-Z]{2} [0-9]{5,6}$"
+#     if not re.match(street_address_validate_pattern,street):
+#         return False
