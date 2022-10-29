@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, request, render_template, flash, json, jsonify
 import uuid
 from flask_mongoengine import MongoEngine
-from app.form_validator import validate_name, validate_street
+from app.form_validator import validate_name, validateSpace
 import urllib 
 import time
 import os
@@ -129,15 +129,15 @@ def index():
       zip = request.form['zip']
       #researcher.insert_one({'r_id': r_id,'firstname': fname, 'lastname': lname, 'dateofbirth': dob, 'street': street, 'city': city, 'state': state, 'zipcode': zip})
       
-      if validate_name(fname,3) is False:
+      if validate_name(fname,1) is False:
         flash(f'Invalid Firstname', 'danger')
-      elif validate_name(lname,3) is False:
+      elif validate_name(lname,1) is False:
         flash(f'Invalid Lastname', 'danger')
-      elif validate_street(street) is False:
-        flash(f'Invalid Street', 'danger')
-      elif validate_name(city,3) is False:
+      elif validate_name(city,1) is False:
         flash(f'Invalid City', 'danger')
-      elif validate_name(state,3) is False:
+      elif validateSpace(street) is False:
+        flash(f'Invalid street', 'danger')
+      elif validate_name(state,2) is False:
         flash(f'Invalid State', 'danger')
       else:
         rssave = Researcher(r_id=r_id, firstname=fname, lastname=lname, dateofbirth=str(dob), street=street, city=city, state=state, zipcode=zip)
@@ -154,10 +154,14 @@ def addorg():
       org_id = org_id[0:8]
       org_name = request.form['org_name']
       org_domain = request.form['org_domain']
-      #researcher.insert_one({'r_id': r_id,'firstname': fname, 'lastname': lname, 'dateofbirth': dob, 'street': street, 'city': city, 'state': state, 'zipcode': zip})
-      orgsave = Organization(org_id=org_id, org_name=org_name, org_domain=org_domain)
-      orgsave.save()
-      flash(f'Data Inserted Successfully! ', 'success')
+      if validateSpace(org_name) is False:
+        flash(f'Invalid organization name', 'danger')
+      elif validate_name(org_domain,1) is False:
+        flash(f'Invalid domain', 'danger')
+      else:
+        orgsave = Organization(org_id=org_id, org_name=org_name, org_domain=org_domain)
+        orgsave.save()
+        flash(f'Data Inserted Successfully! ', 'success')
    return redirect(url_for('query_records_organization')) 
 
 if __name__ == "__main__":
