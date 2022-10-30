@@ -39,6 +39,17 @@ class Organization(db.Document):
     org_name = db.StringField()
     org_domain = db.StringField()
 
+class Vulnreport(db.Document):
+    report_id = db.StringField()
+    priority = db.StringField()
+    triager_name = db.StringField()
+    target_loc = db.StringField()
+    v_title= db.StringField()
+    reward= db.StringField()
+    points= db.StringField()
+    description= db.StringField()
+    org_id= db.StringField()
+
 
 '''@app.route('/temp')
 def temp():
@@ -55,6 +66,11 @@ def query_records_organization():
     organization = Organization.objects.all()
     return render_template('organization.html', organization=organization)
 
+
+@app.route('/vulnreport')
+def query_records_vulnreport():
+    vulnreport = Vulnreport.objects.all()
+    return render_template('vulnreport.html', vulnreport=vulnreport)
 
 @app.route('/updateresearcher', methods=['POST','GET'])
 def updateresearcher():
@@ -90,6 +106,26 @@ def updateorganization():
             flash(f'Updated Successfully:)', 'success')
             return redirect(url_for('query_records_organization'))
 
+@app.route('/updatevulnreport', methods=['POST','GET'])
+def updatevulnreport():
+    if request.method == 'POST':
+        report_id = request.form['txtreport_id']
+        priority = request.form['txtpriority']
+        triager_name = request.form['txttriager_name']
+        target_loc = request.form['txttarget_loc']
+        v_title= request.form['txtv_title']
+        reward= request.form['txtreward']
+        points= request.form['txtpoints']
+        description= request.form['txtdescription']
+        org_id= request.form['txtorg_id']
+        vulnreport = Vulnreport.objects(report_id=report_id).first()
+        if not vulnreport:
+            return json.dumps({'error':'data not found'})
+        else:
+            vulnreport.update(report_id=report_id, priority=priority, triager_name=triager_name, target_loc=target_loc, v_title=v_title, reward=reward, points=points, description=description, org_id=org_id)
+            flash(f'Updated Successfully:)', 'success')
+            return redirect(url_for('query_records_vulnreport'))
+
 @app.route('/delete/<string:getid>', methods = ['POST','GET'])
 def delete_researcher(getid):
     print(getid)
@@ -110,6 +146,16 @@ def delete_organization(getid):
     else:
         organization.delete() 
     return redirect('/organization')
+
+@app.route('/delete/vulnreport/<string:getid>', methods = ['POST','GET'])
+def delete_vulnreport(getid):
+    print(getid)
+    vulnreport = Vulnreport.objects(id=getid).first()
+    if not vulnreport:
+        return jsonify({'error': 'data not found'})
+    else:
+        vulnreport.delete() 
+    return redirect('/vulnreport')
 
 
 
@@ -163,6 +209,31 @@ def addorg():
         orgsave.save()
         flash(f'Data Inserted Successfully! ', 'success')
    return redirect(url_for('query_records_organization')) 
+
+
+@app.route('/addvulnreport', methods= ['POST'])
+def addvulnreport():
+   #flash(f'You are already authenticated', 'danger')
+   if request.method == 'POST':
+      report_id = str(uuid.uuid4())
+      report_id = report_id[0:8]
+      priority = request.form['txtpriority']
+      triager_name = request.form['txttriager_name']
+      target_loc = request.form['txttarget_loc']
+      v_title= request.form['txtv_title']
+      reward= request.form['txtreward']
+      points= request.form['txtpoints']
+      description= request.form['txtdescription']
+      org_id= request.form['txtorg_id']
+      if validateSpace(v_title) is False:
+        flash(f'Invalid title', 'danger')
+      elif validate_name(reward,1) is False:
+        flash(f'Invalid reward', 'danger')
+      else:
+        vulnreport = Vulnreport(report_id=report_id, priority=priority, triager_name=triager_name, target_loc=target_loc, v_title=v_title, reward=reward, points=points, description=description, org_id=org_id)
+        vulnreport.save()
+        flash(f'Data Inserted Successfully! ', 'success')
+   return redirect(url_for('query_records_vulnreport')) 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
