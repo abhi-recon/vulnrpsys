@@ -56,7 +56,12 @@ def temp():
     researcher = Researcher.objects.all()
     return render_template('temp.html', researcher=researcher)'''
 
-@app.route('/')
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route('/researcher')
 def query_records():
     researcher = Researcher.objects.all()
     return render_template('datatable.html', researcher=researcher)
@@ -134,7 +139,7 @@ def delete_researcher(getid):
         return jsonify({'error': 'data not found'})
     else:
         researchers.delete() 
-    return redirect('/')
+    return redirect('/researcher')
 
 
 @app.route('/delete/org/<string:getid>', methods = ['POST','GET'])
