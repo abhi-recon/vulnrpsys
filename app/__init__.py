@@ -7,9 +7,9 @@ import time
 import os
 app = Flask(__name__)
 
-DB_URI = "mongodb+srv://abhisec:"+urllib.parse.quote("Abhishek_!@#123")+"@vulnrpsys.cpamb0y.mongodb.net/vulnrpsys?retryWrites=true&w=majority"
+# DB_URI = "mongodb+srv://abhisec:"+urllib.parse.quote("Abhishek_!@#123")+"@vulnrpsys.cpamb0y.mongodb.net/vulnrpsys?retryWrites=true&w=majority"
 app.config['SECRET_KEY'] = 'vulnrpsys'
-app.config["MONGODB_HOST"] = DB_URI
+# app.config["MONGODB_HOST"] = DB_URI
 app.config['MONGODB_SETTINGS'] = {
     'db': 'vulnrpsys',
     'host': 'localhost',
