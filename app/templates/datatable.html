@@ -1,10 +1,19 @@
 {% extends 'layout.html' %}
+{% block title %}Researcher{% endblock %}
 {% block content %}
+<script>
+  function del(ID, name){
+            if (confirm("Are you sure you want to delete '" + name + "'")){
+                window.location.href = '/delete/researcher/' + ID;
+            }
+        }
+</script>
 <div class="container">
             <div class="headtitle">
               
-              <h1 class="heading"><b>Researcher Details</b></h1>
+            <br><br>
              <a href="/"> <button class="home-btn"> <i class="fa-solid fa-house"></i> Home</button></a>
+             <h1 class="heading"><b>Researcher Details</b></h1>
             </div>
             <br />
             <div class="panel panel-default">

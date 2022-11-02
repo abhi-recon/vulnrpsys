@@ -42,7 +42,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Admin</a>
+        <a class="navbar-brand" href="/">Admin</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -56,14 +56,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
             <a class="nav-link" href="/researcher">Researcher</a>
             <a class="nav-link" href="/organization">Organization</a>
             <a class="nav-link" href="/vulnreport">Reports</a>
+            <a class="nav-link" href="{{url_for('query_submission_records')}}">Submission</a>
           </div>
         </div>
       </div>
     </nav>
+    <!---headings-->
     <!-- card -->
     <div class="main-container">
     <div class="row asdf">
@@ -89,6 +91,14 @@
             <h5 class="card-title">Vulnerability Report</h5>
   
             <a href="/vulnreport" class="btn btn-dark">Go to Vulnerability Report</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Submissions</h5>  
+            <a href="{{url_for('query_submission_records')}}" class="btn btn-dark">Go to Submissions</a>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <head>
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Organization Details</title>
+    <title>{% block title %}{% endblock %}</title>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
     <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -39,11 +39,7 @@
             });
         });
 
-        function del(ID, name){
-            if (confirm("Are you sure you want to delete '" + name + "'")){
-                window.location.href = '/delete/org/' + ID;
-            }
-        }
+        
     </script>
     <style>
 

@@ -2,19 +2,20 @@ from flask import Flask, redirect, url_for, request, render_template, flash, jso
 import uuid
 from flask_mongoengine import MongoEngine
 from app.form_validator import validate_name, validateSpace
+import validators
 import urllib 
 import time
 import os
 app = Flask(__name__)
 
-# DB_URI = "mongodb+srv://abhisec:"+urllib.parse.quote("Abhishek_!@#123")+"@vulnrpsys.cpamb0y.mongodb.net/vulnrpsys?retryWrites=true&w=majority"
+DB_URI = "mongodb+srv://abhisec:"+urllib.parse.quote("Abhishek_!@#123")+"@vulnrpsys.cpamb0y.mongodb.net/vulnrpsys?retryWrites=true&w=majority"
 app.config['SECRET_KEY'] = 'vulnrpsys'
-# app.config["MONGODB_HOST"] = DB_URI
-app.config['MONGODB_SETTINGS'] = {
+app.config["MONGODB_HOST"] = DB_URI
+'''app.config['MONGODB_SETTINGS'] = {
     'db': 'vulnrpsys',
     'host': 'localhost',
     'port': 27017
-}
+}'''
 
 
 #client = MongoClient('localhost', 27017)
@@ -50,6 +51,12 @@ class Vulnreport(db.Document):
     description= db.StringField()
     org_id= db.StringField()
 
+class Submission(db.Document):
+    s_id = db.StringField()
+    date = db.DateTimeField()
+    r_id = db.StringField()
+    report_id= db.StringField()
+
 
 '''@app.route('/temp')
 def temp():
@@ -76,6 +83,26 @@ def query_records_organization():
 def query_records_vulnreport():
     vulnreport = Vulnreport.objects.all()
     return render_template('vulnreport.html', vulnreport=vulnreport)
+
+@app.route("/submission")
+def query_submission_records():
+    submission = Submission.objects.all()
+    return render_template("submission.html", submission=submission)
+
+@app.route("/updatesubmission", methods=['POST','GET'])
+def updatesubmission():
+    if request.method == 'POST':
+        s_id = request.form['txts_id']
+        date = request.form['txtdate']
+        r_id = request.form['txtr_id']  
+        report_id = request.form['txtreport_id']
+        submission = Submission.objects(s_id=s_id).first()
+        if not submission:
+            return json.dumps({'error':'data not found'})
+        else:
+            submission.update(s_id=s_id, date=date, r_id=r_id, report_id=report_id)
+            flash(f'Updated Successfully:)', 'success')
+            return redirect(url_for('query_submission_records'))
 
 @app.route('/updateresearcher', methods=['POST','GET'])
 def updateresearcher():
@@ -131,7 +158,7 @@ def updatevulnreport():
             flash(f'Updated Successfully:)', 'success')
             return redirect(url_for('query_records_vulnreport'))
 
-@app.route('/delete/<string:getid>', methods = ['POST','GET'])
+@app.route('/delete/researcher/<string:getid>', methods = ['POST','GET'])
 def delete_researcher(getid):
     print(getid)
     researchers = Researcher.objects(id=getid).first()
@@ -139,7 +166,20 @@ def delete_researcher(getid):
         return jsonify({'error': 'data not found'})
     else:
         researchers.delete() 
+        flash(f'Deleted Successfully:)', 'success')
     return redirect('/researcher')
+
+@app.route("/delete/submission/<string:getid>", methods = ['POST', 'GET'])
+def delete_submission(getid):
+    print(getid)
+    submission = Submission.objects(id=getid).first()
+    if not submission:
+        return jsonify({'error': 'data not found'})
+    else:
+        submission.delete() 
+        flash(f'Deleted Successfully:)', 'success')
+    return redirect('/submission')
+
 
 
 @app.route('/delete/org/<string:getid>', methods = ['POST','GET'])
@@ -150,6 +190,7 @@ def delete_organization(getid):
         return jsonify({'error': 'data not found'})
     else:
         organization.delete() 
+        flash(f'Deleted Successfully:)', 'success')
     return redirect('/organization')
 
 @app.route('/delete/vulnreport/<string:getid>', methods = ['POST','GET'])
@@ -160,6 +201,7 @@ def delete_vulnreport(getid):
         return jsonify({'error': 'data not found'})
     else:
         vulnreport.delete() 
+        flash(f'Deleted Successfully:)', 'success')
     return redirect('/vulnreport')
 
 
@@ -207,13 +249,27 @@ def addorg():
       org_domain = request.form['org_domain']
       if validateSpace(org_name) is False:
         flash(f'Invalid organization name', 'danger')
-      elif validate_name(org_domain,1) is False:
-        flash(f'Invalid domain', 'danger')
+      elif not validators.domain(org_domain):
+        flash(f'Invalid domain name', 'danger')
       else:
         orgsave = Organization(org_id=org_id, org_name=org_name, org_domain=org_domain)
         orgsave.save()
         flash(f'Data Inserted Successfully! ', 'success')
    return redirect(url_for('query_records_organization')) 
+
+@app.route('/addsubmission', methods= ['POST'])
+def addsubmission():
+    if request.method == 'POST':
+        s_id = str(uuid.uuid4())
+        s_id = s_id[0:8]
+        date = str(request.form['txtdate'])
+        r_id = request.form['txtr_id']
+        report_id = request.form['txtreport_id']
+        submission = Submission(s_id=s_id, date=str(date), r_id=r_id, report_id=report_id)
+        submission.save()
+        flash(f'Data Inserted Successfully! ', 'success')
+    return redirect(url_for('query_submission_records')) 
+
 
 
 @app.route('/addvulnreport', methods= ['POST'])
@@ -232,8 +288,6 @@ def addvulnreport():
       org_id= request.form['txtorg_id']
       if validateSpace(v_title) is False:
         flash(f'Invalid title', 'danger')
-      elif validate_name(reward,1) is False:
-        flash(f'Invalid reward', 'danger')
       else:
         vulnreport = Vulnreport(report_id=report_id, priority=priority, triager_name=triager_name, target_loc=target_loc, v_title=v_title, reward=reward, points=points, description=description, org_id=org_id)
         vulnreport.save()

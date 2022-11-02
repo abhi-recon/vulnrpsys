@@ -4,7 +4,7 @@ table.dataTable td.dt-control {
   cursor: pointer;
 }
 table.dataTable td.dt-control:before {
-  height: 1em;
+  height: 0.5em;
   width: 1em;
   margin-top: -9px;
   display: inline-block;
@@ -16,7 +16,7 @@ table.dataTable td.dt-control:before {
   text-align: center;
   text-indent: 0 !important;
   font-family: "Courier New", Courier, monospace;
-  line-height: 1em;
+  line-height: 0.5em;
   content: "+";
   background-color: #31b131;
 }
@@ -50,7 +50,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled:after {
   display: block;
   opacity: 0.125;
   right: 10px;
-  line-height: 9px;
+  line-height: 2px;
   font-size: 0.9em;
 }
 table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_desc:before, table.dataTable thead > tr > th.sorting_asc_disabled:before, table.dataTable thead > tr > th.sorting_desc_disabled:before,
@@ -105,14 +105,14 @@ div.dataTables_processing {
 div.dataTables_processing > div:last-child {
   position: relative;
   width: 80px;
-  height: 15px;
+  height: 5px;
   margin: 1em auto;
 }
 div.dataTables_processing > div:last-child > div {
   position: absolute;
   top: 0;
   width: 13px;
-  height: 13px;
+  height: 5px;
   border-radius: 50%;
   background: rgba(13, 110, 253, 0.9);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);

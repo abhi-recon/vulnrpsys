@@ -1,10 +1,10 @@
 {% extends 'layout.html' %}
-{% block title %}Organization{% endblock %}
+{% block title %}Submission{% endblock %}
 {% block content %}
 <script>
-  function del(ID, name){
+    function del(ID, name){
             if (confirm("Are you sure you want to delete '" + name + "'")){
-                window.location.href = '/delete/org/' + ID;
+                window.location.href = '/delete/submission/' + ID;
             }
         }
 </script>
@@ -13,7 +13,7 @@
               
             <br><br>
            <a href="/"> <button class="home-btn"> <i class="fa-solid fa-house"></i> Home</button></a>
-           <h1 class="heading"><b>Organization Details</b></h1>
+           <h1 class="heading"><b>Submission Details</b></h1>
           </div>
           
           <br />
@@ -31,7 +31,7 @@
                 </div>
                 {% endfor %}
                 {% endwith %}
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#insert" style="display:inline;" >Add New Organization</a>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#insert" style="display:inline;" >Add New Submission</a>
                 <!--<a href="#" class="btn btn-primary" data-toggle="modal" style="display:inline;float: right;" id="searchSubmit">Search</a>-->
                 <br>
                 <br>
@@ -40,22 +40,22 @@
                         <table id="sample_data" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Org_ID</th>
-                                    <th>Org_Name</th>
-                                    <th>Org_Domain</th>
+                                    <th>Date</th>
+                                    <th>R_ID</th>
+                                    <th>Report_ID</th>
                                     <th>Update</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for row in organization %}
+                                {% for row in submission %}
                                 <tr>
-                                    <td data-name="org_id" class="org_id" data-type="text" data-pk="{{row.id}}">{{row.org_id}}</td>
-                                    <td id="org_name" data-name="org_name" name="org_name" class="org_name" data-type="text" data-pk="{{row.id}}">{{row.org_name}}</td>
+                                    <td data-name="org_id" class="org_id" data-type="text" data-pk="{{row.id}}">{{row.date.date()}}</td>
+                                    <td id="org_name" data-name="org_name" name="org_name" class="org_name" data-type="text" data-pk="{{row.id}}">{{row.r_id}}</td>
             
-                                    <td data-name="org_domain" class="org_domain" data-type="text" data-pk="{{row.id}}">{{row.org_domain}}</td>
+                                    <td data-name="org_domain" class="org_domain" data-type="text" data-pk="{{row.id}}">{{row.report_id}}</td>
                                     <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target='#edit{{ row.id }}' >Update</a></td>
-                                    <td><a href="javascript:del('{{row.id}}','{{row.org_name}}')" class="btn btn-primary ">Delete</a></td>
+                                    <td><a href="javascript:del('{{row.id}}','{{row.s_id}}')" class="btn btn-primary ">Delete</a></td>
                                 </tr>
 
                                  <!-- Modal -->
@@ -63,24 +63,28 @@
                                 <div class="modal-dialog" role="document">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b><i class="fa-solid fa-pen-to-square"></i> Edit Organization detail</b></h5>
+                                      <h5 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b><i class="fa-solid fa-pen-to-square"></i> Edit Submission detail</b></h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block;">
                                         <span aria-hidden="true">×</span>
                                       </button>
                                     </div>
                                     <div class="modal-body">
-                                      <form role="form" method="post" action="/updateorganization">
-                                        <div class="form-group" style="display: none;">
-                                          <label class="col-form-label" >Org_ID:</label>
-                                          <input type="text" class="form-control" id="txtorg_id" name="txtorg_id" value="{{row.org_id}}" >
-                                        </div>
+                                      <form role="form" method="post" action="/updatesubmission">
                                         <div class="form-group">
-                                          <label class="col-form-label" >Org_Name:</label>
-                                          <input type="text" class="form-control" id="txtorg_name" name="txtorg_name" value="{{row.org_name}}"  >
-                                        </div>
+                                            <label class="col-form-label" >S_ID:</label>
+                                            <input type="text" class="form-control" id="txts_id" name="txts_id" value="{{row.s_id}}"  >
+                                          </div>
                                         <div class="form-group">
-                                          <label class="col-form-label">Org_Domain:</label>
-                                          <input type="text" class="form-control" id="txtorg_domain" name="txtorg_domain" value="{{row.org_domain}}">
+                                          <label class="col-form-label" >R_ID:</label>
+                                          <input type="text" class="form-control" id="txtr_id" name="txtr_id" value="{{row.r_id}}"  >
+                                        </div>
+                                        <div class="form-group" >
+                                            <label class="col-form-label" >Date:</label>
+                                            <input type="date" class="form-control" id="txtdate" name="txtdate" value="{{row.date.date()}}">
+                                          </div>
+                                        <div class="form-group">
+                                          <label class="col-form-label">Report_ID:</label>
+                                          <input type="text" class="form-control" id="txtreport_id" name="txtreport_id" value="{{row.report_id}}">
                                         </div>
 
                                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -99,24 +103,25 @@
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h3 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b>Add New Organization</b></h3>
+                                <h3 class="modal-title" id="exampleModalLabel" style="display: inline-block;"><b>Add New Submission</b></h3>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block;">
                                   <span aria-hidden="true">X</span>
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form role="form" method="post" action="{{url_for('addorg')}}">
-                                  <div class="form-group" style="display: none;">
-                                    <label class="col-form-label" >Org_ID:</label>
-                                    <input type="text" class="form-control" id="txtr_id" name="txtr_id"  >
+                                <form role="form" method="post" action="{{url_for('addsubmission')}}">
+                                  
+                                  <div class="form-group">
+                                    <label class="col-form-label">R_ID:</label>
+                                    <input type="text" class="form-control" id="txtr_id" name="txtr_id" required>
                                   </div>
                                   <div class="form-group">
-                                    <label class="col-form-label" >Org_Name:</label>
-                                    <input type="text" class="form-control" id="txtorg_name" name="org_name" required>
+                                    <label class="col-form-label" >Date:</label>
+                                    <input type="date" class="form-control" id="txtdate" name="txtdate" required>
                                   </div>
                                   <div class="form-group">
-                                    <label class="col-form-label">Org_Domain:</label>
-                                    <input type="text" class="form-control" id="txtorg_domain" name="org_domain" required>
+                                    <label class="col-form-label">Report_id:</label>
+                                    <input type="text" class="form-control" id="txtreport_id" name="txtreport_id" required>
                                   </div>
                                   
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -1,10 +1,19 @@
 {% extends 'layout.html' %}
+{% block title %}Vulnerability Report{% endblock %}
 {% block content %}
+<script>
+  function del(ID, name){
+            if (confirm("Are you sure you want to delete '" + name + "'")){
+                window.location.href = '/delete/vulnreport/' + ID;
+            }
+        }
+</script>
 <div class="container">
           <div class="headtitle">
               
-            <h1 class="heading"><b>Vulnerability Reports</b></h1>
+            <br><br>
            <a href="/"> <button class="home-btn"> <i class="fa-solid fa-house"></i> Home</button></a>
+           <h1 class="heading"><b>Vulnerability Reports</b></h1>
           </div>
             <br />
             <div class="panel panel-default">
@@ -39,6 +48,8 @@
                                     <th>points</th>
                                     <th>Description</th>
                                     <th>Org_ID</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,12 +63,12 @@
                                     <td data-name="target_loc" class="target_loc" data-type="text" data-pk="{{row.id}}">{{row.target_loc}}</td>
                                     <td data-name="reward" class="reward" data-type="text" data-pk="{{row.id}}">{{row.reward}}</td>
                                     <td data-name="points" class="points" data-type="text" data-pk="{{row.id}}">{{row.points}}</td>
-                                    <td data-name="description" class="description" data-type="text" data-pk="{{row.id}}">{{row.description}}</td>
+                                    <td data-name="description" class="description" data-type="text" data-pk="{{row.id}}"><textarea rows="7" readonly>{{row.description}}</textarea></td>
                                     <td data-name="org_id" class="org_id" data-type="text" data-pk="{{row.id}}">{{row.org_id}}</td>
                                     
                                     <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target='#edit{{ row.id }}' >Update</a></td>
-                                    <!-- <td><a href="javascript:del('{{row.id}}')" class="btn btn-primary ">Delete</a></td> -->
-                                    <td><a href="/delete/vulnreport/{{row.id}}" class="btn btn-primary ">Delete</a></td>
+                                    <td><a href="javascript:del('{{row.id}}','{{row.v_title}}')" class="btn btn-primary ">Delete</a></td>
+                                    
                                 </tr>
 
                                  <!-- Modal -->
@@ -82,8 +93,18 @@
                                             </div>
                                             <div class="form-group">
                                               <label class="col-form-label">Priority:</label>
-                                              <input type="text" class="form-control" id="txtpriority" name="txtpriority" value="{{row.priority}}">
+                                              <!-- <input list="priority" class="form-control" id="txtpriority" name="txtpriority" value="{{row.priority}}">
+                                               -->
+                                               <select name="txtpriority" class="form-control" value="{{row.priority}}" id="txtpriority">
+                                                <option value="P1">P1</option>
+                                                <option value="P2">P2</option>
+                                                <option value="P3">P3</option>
+                                                <option value="P4">P4</option>
+                                                <option value="P5">P5</option>
+
+                                               </select>
                                             </div>
+                                            
                                             <div class="form-group">
                                                 <label class="col-form-label">Triager_name:</label>
                                                 <input type="text" class="form-control" id="txttriager_name" name="txttriager_name" value="{{row.triager_name}}">
@@ -119,7 +140,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-
+                      </div>
                         <!--modal for insertion -->
                         <div class="modal fade" id="insert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -142,7 +163,15 @@
                                     </div>
                                     <div class="form-group">
                                       <label class="col-form-label">Priority:</label>
-                                      <input type="text" class="form-control" id="txtpriority" name="txtpriority" >
+                                      <!-- <input type="text" class="form-control" id="txtpriority" name="txtpriority" > -->
+                                      <select name="txtpriority" class="form-control" id="txtpriority">
+                                        <option value="P1">P1</option>
+                                        <option value="P2">P2</option>
+                                        <option value="P3">P3</option>
+                                        <option value="P4">P4</option>
+                                        <option value="P5">P5</option>
+
+                                       </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-form-label">Triager_name:</label>
@@ -177,7 +206,7 @@
                             </div>
                           </div>  
                         <!--modal for insertion -->
-                    </div>
+                  
                 </div>
             </div>
 </div>
